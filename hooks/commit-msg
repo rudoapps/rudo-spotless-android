@@ -1,0 +1,19 @@
+#!/bin/sh
+
+COMMIT_MSG_FILE="$1"
+
+SUBJECT_LINE="$(head -n 1 "$COMMIT_MSG_FILE")"
+
+PATTERN='^\[[A-Z][A-Z0-9_-]*-(X|[0-9]+)\]: \b.*'
+
+if echo "$SUBJECT_LINE" | grep -Eq "$PATTERN"; then
+  echo "✅ Commit con el formato correcto: $SUBJECT_LINE."
+  exit 0
+else
+  echo "❌ El commit no cumple con el formato requerido."
+  echo "✅ Formatos válidos:"
+  echo "[PROJECT-123]: Fix translations"
+  echo "[PROJECT-X]: Fix this code without JIRA associated"
+  git reset -q HEAD -- .
+  exit 1
+fi
