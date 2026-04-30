@@ -23,6 +23,10 @@ java {
     withJavadocJar()
 }
 
+base {
+    archivesName.set("rudo-spotless")
+}
+
 gradlePlugin {
     plugins {
         create("rudoSpotless") {
@@ -35,17 +39,6 @@ gradlePlugin {
 }
 
 publishing {
-    // Maven Local repository for testing
-//    publications {
-//        create<MavenPublication>("rudoSpotless") {
-//            from(components["java"])
-//            groupId = "es.rudo.spotless"
-//            artifactId = "rudo-spotless-gradle-plugin"
-//            version = "1.0.0"
-//        }
-//    }
-
-    // Maven Central repository configuration
     publications.withType<MavenPublication>().configureEach {
         pom {
             name.set("Rudo Spotless Gradle Plugin")
@@ -78,26 +71,20 @@ publishing {
 
     repositories {
         maven {
-            name = "staging"
-            url = layout.buildDirectory.dir("staging-deploy").get().asFile.toURI()
+            name = "localStaging"
+            url = rootProject.layout.buildDirectory
+                .dir("staging-deploy")
+                .get()
+                .asFile
+                .toURI()
         }
     }
 }
 
 signing {
-    val signingKeyId: String? by project
-    val signingKey: String? by project
-    val signingPassword: String? by project
-
-    useInMemoryPgpKeys(
-        signingKeyId,
-        signingKey,
-        signingPassword,
-    )
-
+    useGpgCmd()
     sign(publishing.publications)
 }
-
 
 repositories {
     gradlePluginPortal()
