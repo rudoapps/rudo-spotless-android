@@ -1,8 +1,10 @@
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
+# Table of contents
+
 - [Rudo Spotless v1.0.0 🪶](#rudo-spotless-v100-)
-  - [A lightweight and customizable Kotlin linter for Gradle](#a-lightweight-and-customizable-kotlin-linter-for-gradle)
+- [A lightweight and customizable Kotlin linter for Gradle](#a-lightweight-and-customizable-kotlin-linter-for-gradle)
 - [What does this plugin do?](#what-does-this-plugin-do)
 - [System Requirements](#system-requirements)
 - [Notes](#notes)
@@ -32,6 +34,8 @@
   - [Congratulations 👏👏👏](#congratulations--1)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
+---
 
 # Rudo Spotless v1.0.0 🪶
 
