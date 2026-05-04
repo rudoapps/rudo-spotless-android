@@ -1,13 +1,48 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+
+- [Rudo Spotless v1.0.0 🪶](#rudo-spotless-v100-)
+  - [A lightweight and customizable Kotlin linter for Gradle](#a-lightweight-and-customizable-kotlin-linter-for-gradle)
+- [What does this plugin do?](#what-does-this-plugin-do)
+- [System Requirements](#system-requirements)
+- [Notes](#notes)
+- [Publishing a release to Maven Central](#publishing-a-release-to-maven-central)
+  - [Requirements](#requirements)
+    - [Local GPG configuration](#local-gpg-configuration)
+  - [1. Update the version](#1-update-the-version)
+  - [2. Generate the main plugin JAR](#2-generate-the-main-plugin-jar)
+  - [3. Generate the Maven staging repository](#3-generate-the-maven-staging-repository)
+  - [4. Verify the generated files](#4-verify-the-generated-files)
+  - [5. Create the ZIP bundle](#5-create-the-zip-bundle)
+  - [6. Upload to Maven Central](#6-upload-to-maven-central)
+  - [Release command summary](#release-command-summary)
+  - [Congratulations 👏👏👏](#congratulations-)
+- [Usage in local](#usage-in-local)
+  - [1. Get the project](#1-get-the-project)
+  - [2. Publish the plugin to mavenLocal](#2-publish-the-plugin-to-mavenlocal)
+  - [3. Use the Gradle plugin in your project](#3-use-the-gradle-plugin-in-your-project)
+    - [3.1. Enable mavenLocal](#31-enable-mavenlocal)
+    - [3.2. Add the plugin version](#32-add-the-plugin-version)
+    - [3.3. Apply the plugin](#33-apply-the-plugin)
+    - [3.3. Configure maven to deploy in local](#33-configure-maven-to-deploy-in-local)
+  - [4. Run Rudo Spotless manually (optional)](#4-run-rudo-spotless-manually-optional)
+  - [5. Example: run Rudo Spotless via a Git pre-commit hook](#5-example-run-rudo-spotless-via-a-git-pre-commit-hook)
+    - [5.1. Create the pre-commit hook](#51-create-the-pre-commit-hook)
+    - [5.2. Make it executable](#52-make-it-executable)
+  - [Congratulations 👏👏👏](#congratulations--1)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 # Rudo Spotless v1.0.0 🪶
 
-### A lightweight and customizable Kotlin linter for Gradle
+## A lightweight and customizable Kotlin linter for Gradle
 
 **Rudo Spotless 🪶** is a lightweight, reliable, and customizable Gradle plugin for formatting and linting Kotlin code.  
 It is developed by **Rudo** and is based on **Spotless** to ensure a clean and consistent code style.
 
 ---
 
-## What does this plugin do?
+# What does this plugin do?
 
 ➪ Formats Kotlin code using Spotless.  
 ➪ Enforces a consistent code style.  
@@ -16,7 +51,7 @@ It is developed by **Rudo** and is based on **Spotless** to ensure a clean and c
 
 ---
 
-## System Requirements
+# System Requirements
 
 ☕️ **JDK:** 21 or higher.  
 🐘 **Gradle:** 9.x or higher.  
@@ -24,7 +59,7 @@ It is developed by **Rudo** and is based on **Spotless** to ensure a clean and c
 
 ---
 
-## Notes
+# Notes
 
 This repository contains two modules:
 
@@ -35,13 +70,13 @@ The `app` module is included only as an example; the plugin code lives in `rudo-
 
 ---
 
-## Publishing a release to Maven Central
+# Publishing a release to Maven Central
 
 This project is published as a Gradle plugin. The Gradle publishing configuration is already included in the project, so release maintainers only need to prepare their local environment, update the version, generate the staging bundle, and upload it to Maven Central.
 
 ---
 
-### Requirements
+## Requirements
 
 Before publishing, make sure you have:
 
@@ -259,7 +294,13 @@ zip -r rudo-spotless-<version>.zip .
 
 ---
 
-## Usage in local
+## Congratulations 👏👏👏
+
+🎉 Congratulations! Rudo Spotless 🪶 has been successfully published to Maven and is now ready to use in your projects.
+
+---
+
+# Usage in local
 
 The following sections describe how to set up and use the plugin in local.  
 
