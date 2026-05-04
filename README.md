@@ -18,8 +18,8 @@ It is developed by **Rudo** and is based on **Spotless** to ensure a clean and c
 
 ## System Requirements
 
-☕️ **JDK:** 17 or higher (recommended: 21).  
-🐘 **Gradle:** 8.x or higher.  
+☕️ **JDK:** 21 or higher.  
+🐘 **Gradle:** 9.x or higher.  
 🅺 **Kotlin:** Compatible with Kotlin projects.
 
 ---
@@ -35,10 +35,233 @@ The `app` module is included only as an example; the plugin code lives in `rudo-
 
 ---
 
+## Publishing a release to Maven Central
 
-## Usage
+This project is published as a Gradle plugin. The Gradle publishing configuration is already included in the project, so release maintainers only need to prepare their local environment, update the version, generate the staging bundle, and upload it to Maven Central.
 
-The following sections describe how to set up and use the plugin.
+---
+
+### Requirements
+
+Before publishing, make sure you have:
+
+- JDK 21 or newer.
+- GPG installed and configured locally.
+- A GPG key available in your local keyring.
+- The GPG public key uploaded to a public key server, such as `keyserver.ubuntu.com`.
+- Access to the Maven Central namespace used by this project.
+- Access to Sonatype Central Portal.
+
+Each maintainer can use their own GPG key. Do not share private GPG keys.
+
+---
+
+### Local GPG configuration
+
+Each maintainer must configure their local Gradle properties file:
+
+```text
+~/.gradle/gradle.properties
+```
+
+Example:  
+
+```text
+# GPG signing configuration
+signing.gnupg.executable=gpg
+signing.gnupg.keyName=YOUR_GPG_KEY_ID
+```
+
+If gpg is not available in the default path, use the full path:
+
+```text
+signing.gnupg.executable=/opt/homebrew/bin/gpg
+signing.gnupg.keyName=YOUR_GPG_KEY_ID
+```
+
+You can find the key ID with:
+
+```bash
+gpg --list-secret-keys --keyid-format=long
+```
+
+The public key must be available on the key server:
+
+```bash
+gpg --keyserver hkps://keyserver.ubuntu.com --send-keys YOUR_GPG_KEY_ID
+```
+
+---
+
+## 1. Update the version
+
+Update the project version before publishing:
+
+```kotlin
+version = "1.0.1"
+```
+
+**Do not reuse a version that has already been published.**
+
+---
+
+## 2. Generate the main plugin JAR
+
+Run in terminal:
+
+```bash
+./gradlew :rudo-spotless:clean
+./gradlew :rudo-spotless:jar
+```
+
+Check that the main JAR exists:
+
+```bash
+ls -la rudo-spotless/build/libs
+```
+
+Expected files include:
+
+```text
+rudo-spotless-<version>.jar
+rudo-spotless-<version>-sources.jar
+rudo-spotless-<version>-javadoc.jar
+```
+
+---
+
+## 3. Generate the Maven staging repository
+
+Run in terminal:
+
+```bash
+./gradlew :rudo-spotless:publishAllPublicationsToLocalStagingRepository
+```
+
+The staging repository will be generated at:
+
+```text
+rudo-spotless/build/staging-deploy
+```
+
+---
+
+## 4. Verify the generated files
+
+Check that the generated staging repository contains POM files:
+
+```bash
+find rudo-spotless/build/staging-deploy -name "*.pom"
+```
+
+Check that signature files were generated:
+
+```bash
+find rudo-spotless/build/staging-deploy -name "*.asc"
+```
+
+Check that the Gradle plugin marker exists:
+
+```bash
+find rudo-spotless/build/staging-deploy -path "*es.rudo.spotless.gradle.plugin*"
+```
+
+The staging repository should contain both:
+
+```text
+es/rudo/rudo-spotless/<version>/...
+es/rudo/spotless/es.rudo.spotless.gradle.plugin/<version>/...
+```
+
+The second path is the Gradle plugin marker artifact. It is required so the plugin can be applied using:
+
+```kotlin
+plugins {
+    ...
+    id("es.rudo.spotless")
+}
+```
+
+---
+
+## 5. Create the ZIP bundle
+
+From inside the staging directory, create the ZIP:
+
+```bash
+cd rudo-spotless/build/staging-deploy
+zip -r rudo-spotless-<version>.zip .
+```
+
+Example:
+
+```bash
+zip -r rudo-spotless-1.0.1.zip .
+```
+
+Verify the ZIP structure:
+
+```bash
+unzip -l rudo-spotless-<version>.zip | head -40
+```
+
+The ZIP must contain the Maven layout directly:
+
+```text
+es/rudo/...
+```
+
+It must not contain an extra parent folder like:
+
+```text
+staging-deploy/es/rudo/...
+```
+
+---
+
+## 6. Upload to Maven Central
+
+Open Sonatype Central Portal and go to:
+
+```text
+Publish > Deployments
+```
+
+Upload the generated ZIP:
+
+```text
+rudo-spotless-<version>.zip
+```
+
+Wait for validation.  
+If validation succeeds, publish the deployment.  
+If validation fails, check the error details in the portal. Common causes are:  
+- Missing or invalid GPG signatures.
+- Public GPG key not found.
+- Missing `sources.jar`.
+- Missing `javadoc.jar`.
+- Invalid POM metadata.
+- Namespace permissions issue.
+- Incorrect ZIP structure.
+
+---
+
+## Release command summary
+
+```bash
+./gradlew :rudo-spotless:clean
+./gradlew :rudo-spotless:jar
+./gradlew :rudo-spotless:publishAllPublicationsToLocalStagingRepository
+
+cd rudo-spotless/build/staging-deploy
+zip -r rudo-spotless-<version>.zip .
+```
+
+---
+
+## Usage in local
+
+The following sections describe how to set up and use the plugin in local.  
 
 ---
 
@@ -94,6 +317,22 @@ In your `build.gradle.kts` (app module), apply the plugin:
 plugins {
     ...
     alias(libs.plugins.es.rudo.spotless)
+}
+```
+
+### 3.3. Configure maven to deploy in local
+In your `build.gradle.kts` (rudo-spotless module), add the following code:
+```kotlin
+publishing {
+    ...
+    publications {
+        create<MavenPublication>("rudoSpotless") {
+            from(components["java"])
+            groupId = "es.rudo.spotless"
+            artifactId = "rudo-spotless-gradle-plugin"
+            version = "1.0.0"
+        }
+    }
 }
 ```
 
