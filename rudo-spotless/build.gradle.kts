@@ -71,9 +71,9 @@ publishing {
 
     repositories {
         maven {
-            name = "localStaging"
+            name = "mavenCentralBundle"
             url = rootProject.layout.buildDirectory
-                .dir("staging-deploy")
+                .dir("maven-central-bundle")
                 .get()
                 .asFile
                 .toURI()

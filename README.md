@@ -174,13 +174,13 @@ rudo-spotless-<version>-javadoc.jar
 Run in terminal:
 
 ```bash
-./gradlew :rudo-spotless:publishAllPublicationsToLocalStagingRepository
+./gradlew :rudo-spotless:publishAllPublicationsToMavenCentralBundleRepository
 ```
 
 The staging repository will be generated at:
 
 ```text
-rudo-spotless/build/staging-deploy
+rudo-spotless/build/maven-central-bundle
 ```
 
 ---
@@ -190,19 +190,19 @@ rudo-spotless/build/staging-deploy
 Check that the generated staging repository contains POM files:
 
 ```bash
-find rudo-spotless/build/staging-deploy -name "*.pom"
+find rudo-spotless/build/maven-central-bundle -name "*.pom"
 ```
 
 Check that signature files were generated:
 
 ```bash
-find rudo-spotless/build/staging-deploy -name "*.asc"
+find rudo-spotless/build/maven-central-bundle -name "*.asc"
 ```
 
 Check that the Gradle plugin marker exists:
 
 ```bash
-find rudo-spotless/build/staging-deploy -path "*es.rudo.spotless.gradle.plugin*"
+find rudo-spotless/build/maven-central-bundle -path "*es.rudo.spotless.gradle.plugin*"
 ```
 
 The staging repository should contain both:
@@ -228,7 +228,7 @@ plugins {
 From inside the staging directory, create the ZIP:
 
 ```bash
-cd rudo-spotless/build/staging-deploy
+cd rudo-spotless/build/maven-central-bundle
 zip -r rudo-spotless-<version>.zip .
 ```
 
@@ -253,7 +253,7 @@ es/rudo/...
 It must not contain an extra parent folder like:
 
 ```text
-staging-deploy/es/rudo/...
+maven-central-bundle/es/rudo/...
 ```
 
 ---
@@ -290,9 +290,9 @@ If validation fails, check the error details in the portal. Common causes are:
 ```bash
 ./gradlew :rudo-spotless:clean
 ./gradlew :rudo-spotless:jar
-./gradlew :rudo-spotless:publishAllPublicationsToLocalStagingRepository
+./gradlew :rudo-spotless:publishAllPublicationsToMavenCentralBundleRepository
 
-cd rudo-spotless/build/staging-deploy
+cd rudo-spotless/build/maven-central-bundle
 zip -r rudo-spotless-<version>.zip .
 ```
 
